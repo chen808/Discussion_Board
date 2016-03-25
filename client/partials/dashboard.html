@@ -1,0 +1,47 @@
+<div ng-controller="SignInController">
+
+	<!-- User Signs In -->
+	<form>
+		<h1 ng-repeat="i in currentUser">Hello {{ i }}</h1>
+		<input type="hidden" id="name" ng-value="newTopic.user_name=currentUser[0]" >
+	</form>
+	
+
+	<!-- Display the Topics -->
+	<table class="table">
+		<tr>
+			<th>Category</th>
+			<th>Topic</th>
+			<th>User Name</th>
+			<th>Posts</th>
+		</tr>
+		<tr ng-repeat="x in allTopics">
+			<td>{{ x.category }}</td>
+			<td><a ng-click="getATopic(x._id)">{{ x.topic }}</td></a></td>
+			<td>{{ x.user_name }}</td>
+			<td>{{ x.answer_count }}</td>
+		</tr>
+	</table>
+
+
+
+
+	<form>
+		<h3>Add a new Topic</h3>
+		<h5>Topic: <input type="text" ng-model="newTopic.topic"></h5>
+		<h5>Description:</h5>
+		<textarea rows="4" cols="30" ng-model="newTopic.description"></textarea>
+
+
+		<h5>Choose your category</h5>
+		<select ng-model="newTopic.category">
+			<option value="python">Python</option>
+			<option value="ruby">Ruby</option>
+			<option value="javascript">Javascript</option>
+			<option value="php">Php</option>
+		</select>
+
+		<input type="submit" value="Submit" ng-click="addTopic()">
+	</form>
+
+</div>
