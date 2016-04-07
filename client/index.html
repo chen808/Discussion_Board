@@ -59,7 +59,7 @@
 			factory.getEverything = function(callback){
 				$http.get('get_all').success(function(output){
 					allEverything = output
-					console.log(allEverything);
+					callback(allEverything);
 				})
 			}
 
@@ -93,7 +93,12 @@
 				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){
 
 				})
+			}
 
+			factory.thisTopicAnswer = function(id, callback){
+				$http.get('/getThisTopicAnswer/' + id).success(function(output){
+					callback(output);
+				})
 			}
 
 
@@ -117,6 +122,10 @@
 			// get the current user that was stored in Factory
 			UserFactory.getCurrentUser(function(data){
 				$scope.currentUser = data;
+			})
+
+			UserFactory.getEverything(function(data){
+				console.log(data);
 			})
 
 
@@ -155,6 +164,11 @@
 				$scope.thisTopic = data;
 			})
 
+			UserFactory.thisTopicAnswer(topicID, function(data){
+					console.log(data);
+					$scope.thisTopicAnswer = data;
+			})
+
 
 			$scope.newAnswer = function(topic_id){
 				// incoming x is the topic id
@@ -162,6 +176,11 @@
 				var answer = $scope.newAnswer.answer;
 				// send the topic id and answer up to factory
 				UserFactory.answer_to_topic(topic_id, answer, function(data){});
+
+				// UserFactory.thisTopicAnswer(topic_id, function(data){
+				// 	console.log(data);
+				// 	$scope.thisTopicAnswer = data;
+				// })
 			}
 
 

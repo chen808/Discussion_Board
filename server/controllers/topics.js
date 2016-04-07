@@ -31,6 +31,26 @@ module.exports = (function(){
 
 
 
+		 get_all: function(req, res){
+		 	Topic.find({})
+		 		.populate('answers')
+		 		.exec(function(err, answer){
+		 			res.json('answer', {answer});
+		 		})
+		 },
+
+
+		 get_this_topic_answer: function(req, res){
+		 	Topic.findOne({_id: req.params.id})
+		 		.populate('answers')
+		 		.exec(function(err, answer){
+		 			res.json('answer', {answer});
+		 		})
+		 },
+
+
+
+
 
 		 getATopic: function(req, res, id){
 		 	Topic.findById( id, function(err, results){
@@ -72,37 +92,7 @@ module.exports = (function(){
 
 
 
-		 get_all:function(req,res){
-			Topic.findOne({})
-			.populate({
-				path:'topics',
-				model:'Topic',
-				populate: {
-					path:'answers',
-					model:'Answer',
-					populate:{
-						path:'comments',
-						model:'Comment',
-						populate: {
-							path: 'likes',
-							model: 'Like'
-						}
-					}
-				}
-			})
-			.exec(function(err, user){
-				if(err)
-				{
-					console.log(err);
-				}
-				else
-				{
-					// console.log(user);
-					res.json(user);
-				}
-			})
 
-		},
 
 		
 

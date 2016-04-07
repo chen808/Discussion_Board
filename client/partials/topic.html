@@ -1,15 +1,27 @@
 <style type="text/css">
+	#answerContainer{
+		padding: 20px;
+	}
 	.indentThis{
 		margin-left: 60px;
 	}
+	.answerBox{
+		width: 500px;
+		margin-left: 60px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid black;
+	}
+	.eachanswerBox{
+		padding-bottom: 20px;
+		border-bottom: 1px solid black;
+	}
 </style>
 
-<div ng-controller="TopicController">
+<div ng-controller="TopicController" id='answerContainer'>
 
 			<h1>{{ thisTopic.user_name }} posted a topic:</h1>
 			<h3 class='indentThis'>{{ thisTopic.topic }}</h3>
 			<h3 class='indentThis'>{{ thisTopic.description }}</h3>
-			{{ thisTopic }}
 
 			<h3>Post your answer here...</h3>
 
@@ -24,6 +36,16 @@
 
 
 			<!-- Answers Here -->
+			
+
+			<div ng-repeat='x in thisTopicAnswer' align='left' class='answerBox'>
+				<div ng-repeat='y in x'>
+					<div ng-repeat='z in y' class='eachanswerBox'>
+						<h3>{{ z.answer }}</h3>
+						<h6>{{ z.user_name }}</h6>
+					</div>
+				</div>
+			</div>
 </div>
  
 

@@ -23,9 +23,11 @@ module.exports = function(app){
 	})
 
 	app.get('/get_all', function(req, res){
-		console.log('==========');
-		console.log(res);
 		topic.get_all(req, res);
+	})
+
+	app.get('/getThisTopicAnswer/:id', function(req, res){
+		topic.get_this_topic_answer(req, res, req.params.id);
 	})
 
 
