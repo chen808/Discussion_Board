@@ -6,6 +6,15 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.min.js"></script>
 
+    <!-- Bootstrap CDN -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 
 	<!-- Angular Code -->
 	<script type="text/javascript">
@@ -37,12 +46,20 @@
 			var factory = {};
 			var stashCurrentUser = [];
 			var topics = {};
+			var user_and_answer = [];
 
 
 			factory.getAllTopics = function(callback){
 				$http.get('/getTopics').success(function(output){
 					topics = output;
 					callback(topics);
+				})
+			}
+
+			factory.getEverything = function(callback){
+				$http.get('get_all').success(function(output){
+					allEverything = output
+					console.log(allEverything);
 				})
 			}
 
@@ -54,9 +71,10 @@
 				stashCurrentUser.push(info);
 			}
 			
-
 			factory.createTopic = function(info, callback){
+				// send 'info' to database
 				$http.post('/createTopic', info).success(function(output){
+					// send 'info' to 'topics' array
 					topics.push({ category:info.category, topic:info.topic, user_name:info.user_name, posts:info.answer_count });
 				})
 			}
@@ -67,9 +85,24 @@
 					callback(topic);
 				})
 			}
+
+			factory.answer_to_topic = function(topic_id, answer, callback){
+				// store current user name and answer to new table
+				user_and_answer.push({user_name:stashCurrentUser, answer:answer});
+				
+				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){
+
+				})
+
+			}
+
+
 					
 			return factory;
 		});
+
+
+
 
 		// CONTROLLER (SignInController) ==============================================
 		myApp.controller('SignInController', function($scope, UserFactory, $location){
@@ -81,19 +114,20 @@
 				$scope.allTopics = data;
 			})
 
-
+			// get the current user that was stored in Factory
 			UserFactory.getCurrentUser(function(data){
 				$scope.currentUser = data;
 			})
 
 
 			$scope.newUser = function(){
+				// $scope.newAssign grabs the name from signin.html
+				// and sends it up to UserFactory to be stored temporary
 				UserFactory.stashUser($scope.newAssign, function(){
 					$scope.currentUser = UserFactory.index;
 				})
 				//$scope.newAssign = {}; // clear the form
 			}
-
 
 			$scope.addTopic = function(){
 				UserFactory.createTopic($scope.newTopic, function(){
@@ -103,27 +137,38 @@
 			}
 
 			$scope.getATopic = function(x){
-					$location.path('/topic').search({id: x});
+					$location.path('/topic').search({id: x}); //<----- this searches for the name of person who posted
 					//$scope.currentopic = data;
-					//console.log($scope.currentopic);
-				
+					//console.log($scope.currentopic);	
 			}
 
 		})
 
+
+
 		// CONTROLLER TOPIC ==================================
 		myApp.controller('TopicController', function($scope, UserFactory, $location, $routeParams){
-
+			// store '$routeParams.id' into variable 'topicID'
 			topicID = $routeParams.id;
 
-				UserFactory.get_a_topic(topicID, function(data){
-					console.log("batman");
-					console.log(data);
-					$scope.thisTopic = data;
-				})
-		
+			UserFactory.get_a_topic(topicID, function(data){
+				$scope.thisTopic = data;
+			})
 
-			
+
+			$scope.newAnswer = function(topic_id){
+				// incoming x is the topic id
+				// incoming $scope.newAnswer.answer is the answer to the topic
+				var answer = $scope.newAnswer.answer;
+				// send the topic id and answer up to factory
+				UserFactory.answer_to_topic(topic_id, answer, function(data){});
+			}
+
+
+
+
+
+
 		})
 
 

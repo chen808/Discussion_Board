@@ -1,11 +1,29 @@
+<style type="text/css">
+	.indentThis{
+		margin-left: 60px;
+	}
+</style>
+
 <div ng-controller="TopicController">
 
-			<h1>{{ thisTopic.user_name }}</h1>
-			<h1>{{ thisTopic.category }}</h1>
-	
+			<h1>{{ thisTopic.user_name }} posted a topic:</h1>
+			<h3 class='indentThis'>{{ thisTopic.topic }}</h3>
+			<h3 class='indentThis'>{{ thisTopic.description }}</h3>
+			{{ thisTopic }}
+
+			<h3>Post your answer here...</h3>
+
+			<div>
+				<!-- Posting Answers -->
+				<form class='indentThis'>
+					<textarea rows='4' cols='60' ng-model='newAnswer.answer'></textarea><br>
+					<input type='submit' ng-model='newAnswer' ng-click='newAnswer(thisTopic._id)' value='Post'>
+				</form>
+			</div>
+			
 
 
-
+			<!-- Answers Here -->
 </div>
-
+ 
 

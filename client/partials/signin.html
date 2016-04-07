@@ -1,16 +1,21 @@
-<div ng-controller="SignInController">
-
-	<!-- User Signs In -->
-	<h1>Hello!</h1>
-	<h4>Please enter your name to join and share your ideas</h4>
-	<form>
-		<!-- fill out form -->
-		<input type="text" ng-model="newAssign">
-		<a href="#/dashboard"><input type="submit" value="Enter" ng-click="newUser()"></a>  
-	</form>
-
-	<!-- <h3 ng-repeat="i in currentUser">{{ i }}</h3> -->
+<style type="text/css">
+	#sign_in{
+		margin-top: 20%;
+	}
+</style>
 
 
-
+<div ng-controller="SignInController" align='center'>
+	<div id='sign_in'>
+		<!-- User Signs In -->
+		<h1>Hello!</h1>
+		<h4>Please enter your name to join and share your ideas</h4>
+		<form>
+			<!-- fill out form -->
+			<input type="text" ng-model="newAssign">
+			<!-- When user clicks on 'submit', the code goes to controller 'newUser' method -->
+			<!-- Look to index.html next... -->
+			<a href="#/dashboard"><input type="submit" value="Enter" ng-click="newUser()"></a>  
+		</form>
+	</div>
 </div>
