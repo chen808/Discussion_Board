@@ -25,9 +25,17 @@ module.exports = function(app){
 	app.get('/get_all', function(req, res){
 		topic.get_all(req, res);
 	})
-
 	app.get('/getThisTopicAnswer/:id', function(req, res){
 		topic.get_this_topic_answer(req, res, req.params.id);
+
+	})
+
+	app.get('/upvote_count/:id', function(req, res){
+		topic.upvote_this_count(req, res, req.params.id);
+	})
+
+	app.get('/downvote_count/:id', function(req, res){
+		topic.downvote_this_count(req, res, req.params.id);
 	})
 
 

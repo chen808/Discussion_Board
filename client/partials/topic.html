@@ -29,6 +29,7 @@
 				<!-- Posting Answers -->
 				<form class='indentThis'>
 					<textarea rows='4' cols='60' ng-model='newAnswer.answer'></textarea><br>
+					<!-- When user clicks to submit, pass the topic id along -->
 					<input type='submit' ng-model='newAnswer' ng-click='newAnswer(thisTopic._id)' value='Post'>
 				</form>
 			</div>
@@ -40,6 +41,16 @@
 					<div ng-repeat='z in y' class='eachanswerBox'>
 						<h3>{{ z.answer }}</h3>
 						<h6>{{ z.user_name }}</h6>
+						<input type='submit' ng-click='upvote(z._id)' value='Up vote'>
+						
+
+						{{updated_upvote_count.upvote}}
+
+
+
+
+						<input type='submit' ng-click='downvote(z._id)' value='Down vote'>
+						{{updated_downvote_count.downvote}}
 					</div>
 				</div>
 			</div>

@@ -103,6 +103,18 @@
 				})
 			}
 
+			factory.upvoteCount = function(id, callback){
+				$http.get('/upvote_count/' + id).success(function(output){
+					callback(output);
+				})
+			}
+
+			factory.downvoteCount = function(id, callback){
+				$http.get('/downvote_count/' + id).success(function(output){
+					callback(output);
+				})
+			}
+
 
 					
 			return factory;
@@ -178,6 +190,8 @@
 			})
 
 
+
+
 			$scope.newAnswer = function(topic_id){
 				// incoming $scope.newAnswer.answer is the answer to the topic
 				var answer = $scope.newAnswer.answer;
@@ -190,6 +204,20 @@
 				});
 				// clear the form
 				$scope.newAnswer = {};
+			}
+
+			$scope.upvote = function(topic_id){
+				UserFactory.upvoteCount(topic_id, function(data){
+					console.log(data);
+					$scope.updated_upvote_count = data;
+				});
+			}
+
+			$scope.downvote = function(topic_id){
+				UserFactory.downvoteCount(topic_id, function(data){
+					console.log(data);
+					$scope.updated_downvote_count = data;
+				});
 			}
 
 		})

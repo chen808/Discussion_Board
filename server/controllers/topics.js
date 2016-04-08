@@ -91,6 +91,37 @@ module.exports = (function(){
 		 },
 
 
+		 upvote_this_count: function(req, res, id){
+		 	// find the specific answer using incoming id, then increment by 1
+		 	Answer.findOneAndUpdate( {_id: id}, {$inc:{upvote: 1}}, function(err, Answer){
+		 		if(err){
+		 			console.log('error incrementing');
+		 		}
+		 		else{
+		 			console.log('increment success!');
+		 			// return the json data (which includes the upvote count)
+		 			res.json(Answer);
+		 		}
+		 	} );
+		 },
+
+
+ 		 downvote_this_count: function(req, res, id){
+		 	// find the specific answer using incoming id, then increment by 1
+		 	Answer.findOneAndUpdate( {_id: id}, {$inc:{downvote: -1}}, function(err, Answer){
+		 		if(err){
+		 			console.log('error downvoting');
+		 		}
+		 		else{
+		 			console.log('downvote success!');
+		 			// return the json data (which includes the upvote count)
+		 			console.log(Answer);
+		 			res.json(Answer);
+		 		}
+		 	} );
+		 },
+
+
 
 
 
