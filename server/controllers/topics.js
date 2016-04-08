@@ -30,7 +30,7 @@ module.exports = (function(){
 		 },
 
 
-
+		 // *** look in to this (extra code??)
 		 get_all: function(req, res){
 		 	Topic.find({})
 		 		.populate('answers')
@@ -39,7 +39,7 @@ module.exports = (function(){
 		 		})
 		 },
 
-
+		 // *** extra code, same as bottom??
 		 get_this_topic_answer: function(req, res){
 		 	Topic.findOne({_id: req.params.id})
 		 		.populate('answers')

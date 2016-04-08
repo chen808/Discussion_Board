@@ -89,6 +89,8 @@
 			factory.answer_to_topic = function(topic_id, answer, callback){
 				// store current user name and answer to new table
 				user_and_answer.push({user_name:stashCurrentUser, answer:answer});
+
+				callback(user_and_answer);
 				
 				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){
 
@@ -135,20 +137,22 @@
 				UserFactory.stashUser($scope.newAssign, function(){
 					$scope.currentUser = UserFactory.index;
 				})
-				//$scope.newAssign = {}; // clear the form
 			}
 
 			$scope.addTopic = function(){
+				// $scope.newTopic contains topic, description, and category
 				UserFactory.createTopic($scope.newTopic, function(){
 					$scope.topics = UserFactory.getAllTopics
 				})
-				$scope.newTopic = {};
+				$scope.newTopic = {}; // clear the form
 			}
 
 			$scope.getATopic = function(x){
-					$location.path('/topic').search({id: x}); //<----- this searches for the name of person who posted
-					//$scope.currentopic = data;
-					//console.log($scope.currentopic);	
+					// x contains the topic id
+					// this will reroute to partials/topic.html (will be under TopicController)
+					$location.path('/topic').search({id: x});
+					// alternate way: var location = '/topic/' + x;
+					// $location.path(location); 	
 			}
 
 		})
@@ -157,36 +161,36 @@
 
 		// CONTROLLER TOPIC ==================================
 		myApp.controller('TopicController', function($scope, UserFactory, $location, $routeParams){
+
+			// $routeParams.id holds the incoming topic id
+
 			// store '$routeParams.id' into variable 'topicID'
 			topicID = $routeParams.id;
+
 
 			UserFactory.get_a_topic(topicID, function(data){
 				$scope.thisTopic = data;
 			})
 
+
 			UserFactory.thisTopicAnswer(topicID, function(data){
-					console.log(data);
-					$scope.thisTopicAnswer = data;
+					$scope.this_TopicAnswer = data;
 			})
 
 
 			$scope.newAnswer = function(topic_id){
-				// incoming x is the topic id
 				// incoming $scope.newAnswer.answer is the answer to the topic
 				var answer = $scope.newAnswer.answer;
 				// send the topic id and answer up to factory
-				UserFactory.answer_to_topic(topic_id, answer, function(data){});
-
-				// UserFactory.thisTopicAnswer(topic_id, function(data){
-				// 	console.log(data);
-				// 	$scope.thisTopicAnswer = data;
-				// })
+				UserFactory.answer_to_topic(topic_id, answer, function(data){
+					// attempting to update the list but currently does not work.
+					UserFactory.thisTopicAnswer(topicID, function(data){
+						$scope.this_TopicAnswer = data;
+					});
+				});
+				// clear the form
+				$scope.newAnswer = {};
 			}
-
-
-
-
-
 
 		})
 

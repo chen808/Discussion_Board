@@ -8,16 +8,16 @@
 	.answerBox{
 		width: 500px;
 		margin-left: 60px;
-		padding-bottom: 20px;
-		border-bottom: 1px solid black;
 	}
 	.eachanswerBox{
 		padding-bottom: 20px;
-		border-bottom: 1px solid black;
 	}
 </style>
 
 <div ng-controller="TopicController" id='answerContainer'>
+
+	<a href="#/"><input type="submit" value="Log Out"></a> 
+	<a href="#/dashboard"><input type="submit" value="Back to Dashboard"></a> 
 
 			<h1>{{ thisTopic.user_name }} posted a topic:</h1>
 			<h3 class='indentThis'>{{ thisTopic.topic }}</h3>
@@ -34,11 +34,8 @@
 			</div>
 			
 
-
 			<!-- Answers Here -->
-			
-
-			<div ng-repeat='x in thisTopicAnswer' align='left' class='answerBox'>
+			<div ng-repeat='x in this_TopicAnswer' align='left' class='answerBox'>
 				<div ng-repeat='y in x'>
 					<div ng-repeat='z in y' class='eachanswerBox'>
 						<h3>{{ z.answer }}</h3>
