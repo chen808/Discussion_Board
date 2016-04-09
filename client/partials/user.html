@@ -1,0 +1,10 @@
+<div ng-controller="UserController" align='center'>
+	<h1>User Profile Page</h1>
+	<a href="#/"><input type="submit" value="Log Out"></a> 
+	<a href="#/dashboard"><input type="submit" value="Back to Dashboard"></a> 
+	<h3 ng-repeat="x in userProfileData">{{x.user_name}}</h3>
+	<h6 ng-repeat="x in userProfileData">Post Count: {{x.post_count}}</h6>
+	<h6 ng-repeat="x in userProfileData">Topic Count: {{x.topic_count}}</h6>
+	
+
+</div>

@@ -25,8 +25,12 @@
 			<tr ng-repeat="x in allTopics">
 				<td>{{ x.category }}</td>
 				<td><a ng-model='getATopic' ng-click="getATopic(x._id)">{{ x.topic }}</td></a></td>
-				<td>{{ x.user_name }}</td>
-				<td>{{ x.answer_count }}</td>
+
+				<!-- Once user clicks on a name, will go to Profile page -->
+				<td><a ng-click="getThisUserProfile(x.user_name)">{{ x.user_name }}</a></td>
+
+				<!-- Show post(answer) count -->
+				<td>{{ x.__v }}</td>
 			</tr>
 		</table>
 

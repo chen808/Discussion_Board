@@ -33,7 +33,7 @@
 		        .when('/topic',{
 		            templateUrl: 'partials/topic.html'
 		        })
-		        .when('/user',{
+		        .when('/user/:name',{
 		            templateUrl: 'partials/user.html'
 		        })
 		        .otherwise({
@@ -47,6 +47,7 @@
 			var stashCurrentUser = [];
 			var topics = {};
 			var user_and_answer = [];
+			var tempUser = [];
 
 
 			factory.getAllTopics = function(callback){
@@ -77,12 +78,40 @@
 					// send 'info' to 'topics' array
 					topics.push({ category:info.category, topic:info.topic, user_name:info.user_name, posts:info.answer_count });
 				})
+				// also send the 'stashCurrentUser' to update the 'User' collection
+				$http.post('/update_user_topic_count', stashCurrentUser).success(function(output){})
 			}
 
+
+
+
+
+
+
+
 			factory.get_a_topic = function(info, callback){
+				console.log(info);
 				$http.get('/getthisTopic/' + info).success(function(output){
 					topic = output;
 					callback(topic);
+				})
+			}
+
+
+
+
+
+
+
+
+
+
+			factory.get_User_Profile = function(info, callback){
+
+				$http.post('/get_this_User_Profile/' + info).success(function(output){
+					// return the output
+					callback(output);
+					console.log(output);
 				})
 			}
 
@@ -92,9 +121,10 @@
 
 				callback(user_and_answer);
 				
-				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){
+				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){});
 
-				})
+				// also send the 'stashCurrentUser' to update the 'User' collection
+				$http.post('/update_user_post_count', stashCurrentUser).success(function(output){});
 			}
 
 			factory.thisTopicAnswer = function(id, callback){
@@ -167,6 +197,12 @@
 					// $location.path(location); 	
 			}
 
+			$scope.getThisUserProfile = function(name){
+
+				var location = '/user/' + name
+				$location.path(location);
+			}
+
 		})
 
 
@@ -178,9 +214,12 @@
 
 			// store '$routeParams.id' into variable 'topicID'
 			topicID = $routeParams.id;
+			console.log(topicID);
 
 
 			UserFactory.get_a_topic(topicID, function(data){
+				console.log('=======');
+				console.log(data);
 				$scope.thisTopic = data;
 			})
 
@@ -222,6 +261,19 @@
 
 		})
 
+		// CONTROLLER User ==================================
+		myApp.controller('UserController', function($scope, UserFactory, $location, $routeParams){
+
+			thisUser = $routeParams.name;
+
+			// incoming 'name' contains the name of whom user clicked on
+			UserFactory.get_User_Profile(thisUser, function(data){
+				console.log(data);
+				$scope.userProfileData = data;
+				console.log($scope.userProfileData);
+			})
+
+		})
 
 		
 

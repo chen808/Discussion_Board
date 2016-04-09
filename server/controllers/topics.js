@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var Topic = mongoose.model('Topic');
 var Answer = mongoose.model('Answer');
+var User = mongoose.model('User');
 
 module.exports = (function(){
 
@@ -28,6 +29,27 @@ module.exports = (function(){
 		 		}
 		 	})
 		 },
+
+
+		 get_User_Profile: function(req, res){
+		 	console.log('=========OMG HEY====');
+		 	console.log(req.params.name);
+		 	// req.body now contains the user name
+		 	User.find({user_name:req.params.name}, function(err, results){
+		 		console.log('===OMG===');
+		 		console.log(results);
+		 		if(err){
+		 			console.log('Error getting user profile info');
+		 		}
+		 		else{
+		 			res.json(results);
+		 			console.log('=========== OMG');
+		 			console.log(results);
+		 		}
+		 	})
+		 },
+
+
 
 
 		 // *** look in to this (extra code??)
@@ -64,7 +86,7 @@ module.exports = (function(){
 		 	
 		 },
 
-
+		 // add answer(post) ==================================================================================
 		 addAnswer: function(req, res, id){
 		 	console.log(req.body[0].user_name[0]);
 		 	console.log(req.body[0].answer);
@@ -90,7 +112,7 @@ module.exports = (function(){
 		 	})
 		 },
 
-
+		 // Up vote count =====================================================================================
 		 upvote_this_count: function(req, res, id){
 		 	// find the specific answer using incoming id, then increment by 1
 		 	Answer.findOneAndUpdate( {_id: id}, {$inc:{upvote: 1}}, function(err, Answer){
@@ -105,7 +127,7 @@ module.exports = (function(){
 		 	} );
 		 },
 
-
+		 // Down vote count ===================================================================================
  		 downvote_this_count: function(req, res, id){
 		 	// find the specific answer using incoming id, then increment by 1
 		 	Answer.findOneAndUpdate( {_id: id}, {$inc:{downvote: -1}}, function(err, Answer){
@@ -120,6 +142,89 @@ module.exports = (function(){
 		 		}
 		 	} );
 		 },
+
+
+		 // Update User topic count ==========================================================================
+		 updateUserTopicCount: function(req, res){
+		 	// req.body contains the current user name
+		 	
+		 	// lets target the User table and find if current user exists
+		 	User.count({user_name:req.body}, function(err, count){
+		 		if(count > 0){
+		 			// if count is over 0, user exists! then we'll just update topic count
+		 			User.findOneAndUpdate( {user_name:req.body}, {$inc:{topic_count: 1}}, function(err, User){
+		 				if(err){
+		 					console.log('error updating topic count');
+		 				}
+		 				else{
+		 					console.log('successfully updated topic count');
+		 				}
+		 			})
+		 		}
+		 		// if count is < 0, user does not exist. Now we'll create user
+		 		else{
+		 			// creating the new user
+		 			User.create({user_name:req.body}, function(err, results){
+		 				if(err){
+		 					console.log('error creating new user in User Collection');
+		 				}
+		 				else{
+		 					console.log('successfully created new user in User Collection');
+		 				}
+		 			})
+		 			// update the topic count
+		 			User.findOneAndUpdate( {user_name:req.body}, {$inc:{topic_count: 1}}, function(err, User){
+		 				if(err){
+		 					console.log('error updating topic count');
+		 				}
+		 				else{
+		 					console.log('successfully updated topic count');
+		 				}
+		 			})
+		 		}
+		 	})
+		 },
+
+
+		 // Update User post count ============================================================================
+		 updateUserPostCount: function(req, res){
+		 	// req.body contains the current user name
+
+		 	User.count({user_name:req.body}, function(err, count){
+	 		if(count > 0){
+	 			// if count is over 0, user exists! then we'll just update post count
+	 			User.findOneAndUpdate( {user_name:req.body}, {$inc:{post_count: 1}}, function(err, User){
+	 				if(err){
+	 					console.log('error updating post count');
+	 				}
+	 				else{
+	 					console.log('successfully updated post count');
+	 				}
+	 			})
+	 		}
+	 		// if count is < 0, user does not exist. Now we'll create user
+	 		else{
+	 			// creating the new user
+	 			User.create({user_name:req.body}, function(err, results){
+	 				if(err){
+	 					console.log('error creating new user in User Collection');
+	 				}
+	 				else{
+	 					console.log('successfully created new user in User Collection');
+	 				}
+	 			})
+	 			// update the post count
+	 			User.findOneAndUpdate( {user_name:req.body}, {$inc:{post_count: 1}}, function(err, User){
+	 				if(err){
+	 					console.log('error updating post count');
+	 				}
+	 				else{
+	 					console.log('successfully updated post count');
+	 				}
+	 			})
+	 		}
+	 	})
+		},
 
 
 

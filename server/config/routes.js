@@ -19,6 +19,7 @@ module.exports = function(app){
 	})
 
 	app.get('/getthisTopic/:id', function(req, res){
+		console.log(req);
 		topic.getATopic(req, res, req.params.id);
 	})
 
@@ -40,6 +41,17 @@ module.exports = function(app){
 
 
 
+
+	app.post('/get_this_User_Profile/:name', function(req, res){
+		topic.get_User_Profile(req, res);
+
+	})	
+
+
+
+
+
+
 	// POSTS ===========================================
 	app.post('/createTopic', function(req, res){
 		topic.createTopic(req, res);
@@ -49,6 +61,16 @@ module.exports = function(app){
 		topic.addAnswer(req, res, req.params.id);
 	})
 
+	// once user creates a topic, update topic count
+	app.post('/update_user_topic_count/', function(req, res){
+		topic.updateUserTopicCount(req, res);
+	})
+
+	// once user answers a topic, update post count
+	app.post('/update_user_post_count/', function(req, res){
+	// once user answers a topic, update post count
+		topic.updateUserPostCount(req, res);
+	})
 
 
 
