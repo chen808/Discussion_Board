@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Topic = mongoose.model('Topic');
 var Answer = mongoose.model('Answer');
 var User = mongoose.model('User');
+var Comment = mongoose.model('Comment')
 
 module.exports = (function(){
 
@@ -71,6 +72,16 @@ module.exports = (function(){
 		 },
 
 
+		 get_this_answer_comment: function(req, res){
+		 	Answer.findOne({_id: req.params.id})
+		 		.populate('comments')
+		 		.exec(function(err, comment){
+		 			res.json('comment', {comment});
+		 		})
+		 },
+
+
+
 
 
 
@@ -88,9 +99,9 @@ module.exports = (function(){
 
 		 // add answer(post) ==================================================================================
 		 addAnswer: function(req, res, id){
-		 	console.log(req.body[0].user_name[0]);
-		 	console.log(req.body[0].answer);
-		 	console.log(id);
+		 	// console.log(req.body[0].user_name[0]);
+		 	// console.log(req.body[0].answer);
+		 	// console.log(id);
 
 		 	Topic.findOne({_id:req.params.id}, function(err, topic){
 		 		var answer = new Answer({user_name:req.body[0].user_name[0], answer:req.body[0].answer});
@@ -111,6 +122,45 @@ module.exports = (function(){
 		 		})
 		 	})
 		 },
+
+
+		 addComment: function(req, res, id){
+		 	// console.log(req.body[0].user_name[0]);
+		 	// console.log(req.body[0].comment);
+		 	// console.log(id);
+
+		 	Answer.findOne({_id:req.params.id}, function(err, answer){
+		 		var comment = new Comment({user_name:req.body[0].user_name[0], comment:req.body[0].comment});
+
+		 		comment._answer = answer._id;
+
+		 		answer.comments.push(comment);
+
+		 		comment.save(function(err){
+		 			answer.save(function(err){
+		 				if(err){
+		 					console.log('error saving');
+		 				}
+		 				else{
+		 					res.redirect('/');
+		 				}
+		 			})
+		 		})
+		 	})
+
+		 },
+
+
+
+
+
+
+
+
+
+
+
+
 
 		 // Up vote count =====================================================================================
 		 upvote_this_count: function(req, res, id){

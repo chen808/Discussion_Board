@@ -47,6 +47,7 @@
 			var stashCurrentUser = [];
 			var topics = {};
 			var user_and_answer = [];
+			var user_and_comment = [];
 			var tempUser = [];
 
 
@@ -82,49 +83,46 @@
 				$http.post('/update_user_topic_count', stashCurrentUser).success(function(output){})
 			}
 
-
-
-
-
-
-
-
 			factory.get_a_topic = function(info, callback){
-				console.log(info);
 				$http.get('/getthisTopic/' + info).success(function(output){
 					topic = output;
 					callback(topic);
 				})
 			}
 
-
-
-
-
-
-
-
-
-
 			factory.get_User_Profile = function(info, callback){
 
 				$http.post('/get_this_User_Profile/' + info).success(function(output){
 					// return the output
 					callback(output);
-					console.log(output);
 				})
 			}
 
 			factory.answer_to_topic = function(topic_id, answer, callback){
-				// store current user name and answer to new table
+				// store current user name and answer to new array
 				user_and_answer.push({user_name:stashCurrentUser, answer:answer});
 
 				callback(user_and_answer);
 				
+				// add answer, pass in topic id and user and answer
 				$http.post('/add_answer/' + topic_id, user_and_answer).success(function(output){});
 
 				// also send the 'stashCurrentUser' to update the 'User' collection
 				$http.post('/update_user_post_count', stashCurrentUser).success(function(output){});
+			}
+
+
+
+			factory.comment_to_answer = function(answer_id, comment, callback){
+				// store current user name and comment to new array
+				user_and_comment.push({user_name:stashCurrentUser, comment:comment});
+
+				callback(user_and_comment);
+
+				console.log(user_and_comment);
+
+				// add comment, pass in topic id, user, and comment
+				$http.post('/add_comment/' + answer_id, user_and_comment).success(function(output){});
 			}
 
 			factory.thisTopicAnswer = function(id, callback){
@@ -132,6 +130,27 @@
 					callback(output);
 				})
 			}
+
+
+
+
+			factory.thisTopicComment = function(id, callback){
+				$http.get('/getThisAnswerComment/' + id).success(function(output){
+					console.log('==========');
+					console.log(output);
+					callback(output);
+				})
+			}
+
+
+
+
+
+
+
+
+
+
 
 			factory.upvoteCount = function(id, callback){
 				$http.get('/upvote_count/' + id).success(function(output){
@@ -144,16 +163,14 @@
 					callback(output);
 				})
 			}
-
-
-					
+		
 			return factory;
 		});
 
 
 
 
-		// CONTROLLER (SignInController) ==============================================
+		// CONTROLLER ================================================================
 		myApp.controller('SignInController', function($scope, UserFactory, $location){
 
 			$scope.currentUser = {};
@@ -171,7 +188,6 @@
 			UserFactory.getEverything(function(data){
 				console.log(data);
 			})
-
 
 			$scope.newUser = function(){
 				// $scope.newAssign grabs the name from signin.html
@@ -191,15 +207,16 @@
 
 			$scope.getATopic = function(x){
 					// x contains the topic id
-					// this will reroute to partials/topic.html (will be under TopicController)
+					// reroute TopicController
 					$location.path('/topic').search({id: x});
 					// alternate way: var location = '/topic/' + x;
 					// $location.path(location); 	
 			}
 
 			$scope.getThisUserProfile = function(name){
-
+				// store the route and name into variable
 				var location = '/user/' + name
+				// reroute to UserController
 				$location.path(location);
 			}
 
@@ -207,28 +224,21 @@
 
 
 
-		// CONTROLLER TOPIC ==================================
+		// CONTROLLER ================================================================
 		myApp.controller('TopicController', function($scope, UserFactory, $location, $routeParams){
 
-			// $routeParams.id holds the incoming topic id
+			// $routeParams.id holds the incoming topic id from '$scope.getATopic' (SignInController)
 
 			// store '$routeParams.id' into variable 'topicID'
 			topicID = $routeParams.id;
-			console.log(topicID);
-
 
 			UserFactory.get_a_topic(topicID, function(data){
-				console.log('=======');
-				console.log(data);
 				$scope.thisTopic = data;
 			})
-
 
 			UserFactory.thisTopicAnswer(topicID, function(data){
 					$scope.this_TopicAnswer = data;
 			})
-
-
 
 
 			$scope.newAnswer = function(topic_id){
@@ -245,6 +255,22 @@
 				$scope.newAnswer = {};
 			}
 
+			$scope.newComment = function(answer_id){
+				// $scope.newAnswer.comments contains the comment, store into variable
+				var comment = $scope.newAnswer.comments;
+				// send the id and comment up to factory
+				UserFactory.comment_to_answer(answer_id, comment, function(data){
+					// UserFactory.thisTopicComment(answer_id, function(data){
+					// 	$scope.this_AnswerTopic = data;
+					// });
+				});
+				UserFactory.thisTopicComment(answer_id, function(data){
+					$scope.this_AnswerTopic = data;
+				});
+				// clear the form
+				$scope.newAnswer = {};
+			}
+
 			$scope.upvote = function(topic_id){
 				UserFactory.upvoteCount(topic_id, function(data){
 					console.log(data);
@@ -254,23 +280,23 @@
 
 			$scope.downvote = function(topic_id){
 				UserFactory.downvoteCount(topic_id, function(data){
-					console.log(data);
 					$scope.updated_downvote_count = data;
 				});
 			}
 
+			
+
 		})
 
-		// CONTROLLER User ==================================
+		// CONTROLLER ==========================================================
 		myApp.controller('UserController', function($scope, UserFactory, $location, $routeParams){
 
+			// $routeParams.name is coming from $scope.getThisUserProfile (SignInController)
 			thisUser = $routeParams.name;
 
-			// incoming 'name' contains the name of whom user clicked on
+			// AUTO look for the topic by user name (thisUser)
 			UserFactory.get_User_Profile(thisUser, function(data){
-				console.log(data);
 				$scope.userProfileData = data;
-				console.log($scope.userProfileData);
 			})
 
 		})

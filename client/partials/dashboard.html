@@ -10,7 +10,7 @@
 		<!-- User Signs In -->
 		<form>
 			<h1 ng-repeat="i in currentUser">Hello {{ i }}</h1>
-			<!-- Keep this user hidden -->
+			<!-- Keep this user HIDDEN -->
 			<input type="hidden" id="name" ng-value="newTopic.user_name=currentUser[0]" >
 		</form>
 		
@@ -24,6 +24,7 @@
 			</tr>
 			<tr ng-repeat="x in allTopics">
 				<td>{{ x.category }}</td>
+				<!-- if user clicks this topic, will go to that specific topic page -->
 				<td><a ng-model='getATopic' ng-click="getATopic(x._id)">{{ x.topic }}</td></a></td>
 
 				<!-- Once user clicks on a name, will go to Profile page -->
@@ -50,6 +51,7 @@
 				<option value="php">Php</option>
 			</select>
 
+			<!-- Submit -->
 			<input type="submit" value="Submit" ng-click="addTopic()">
 			<a href="#/"><input type="submit" value="Log Out"></a> 
 		</form>

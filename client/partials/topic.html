@@ -12,48 +12,65 @@
 	.eachanswerBox{
 		padding-bottom: 20px;
 	}
+	#commentBox{
+		margin-left: 80px;
+	}
 </style>
 
 <div ng-controller="TopicController" id='answerContainer'>
-
+	<!-- Log out and Dashboard button -->
 	<a href="#/"><input type="submit" value="Log Out"></a> 
 	<a href="#/dashboard"><input type="submit" value="Back to Dashboard"></a> 
 
-			<h1>{{ thisTopic.user_name }} posted a topic:</h1>
-			<h3 class='indentThis'>{{ thisTopic.topic }}</h3>
-			<h3 class='indentThis'>{{ thisTopic.description }}</h3>
+	<!-- User and topic question -->
+	<h1>{{ thisTopic.user_name }} posted a topic:</h1>
+	<h3 class='indentThis'>{{ thisTopic.topic }}</h3>
+	<h3 class='indentThis'>{{ thisTopic.description }}</h3>
 
-			<h3>Post your answer here...</h3>
+	<h3>Post your answer here...</h3>
 
-			<div>
-				<!-- Posting Answers -->
-				<form class='indentThis'>
-					<textarea rows='4' cols='60' ng-model='newAnswer.answer'></textarea><br>
-					<!-- When user clicks to submit, pass the topic id along -->
-					<input type='submit' ng-model='newAnswer' ng-click='newAnswer(thisTopic._id)' value='Post'>
-				</form>
-			</div>
-			
+	<!-- Posting Answers -->
+	<div>
+		<form class='indentThis'>
+			<textarea rows='4' cols='60' ng-model='newAnswer.answer'></textarea><br>
+			<!-- When user clicks to submit, pass the topic id along -->
+			<input type='submit' ng-model='newAnswer' ng-click='newAnswer(thisTopic._id)' value='Post'>
+		</form>
+	</div>
 
-			<!-- Answers Here -->
-			<div ng-repeat='x in this_TopicAnswer' align='left' class='answerBox'>
-				<div ng-repeat='y in x'>
-					<div ng-repeat='z in y' class='eachanswerBox'>
-						<h3>{{ z.answer }}</h3>
-						<h6>{{ z.user_name }}</h6>
-						<input type='submit' ng-click='upvote(z._id)' value='Up vote'>
-						
+	<!-- Answers Here -->
+	<div ng-repeat='x in this_TopicAnswer' align='left' class='answerBox'>
+		<div ng-repeat='y in x'>
+			<div ng-repeat='z in y' class='eachanswerBox'>
+				<h3>{{ z.answer }}</h3>
+				<h6>{{ z.user_name }}</h6>
 
-						{{updated_upvote_count.upvote}}
-
-
-
-
-						<input type='submit' ng-click='downvote(z._id)' value='Down vote'>
-						{{updated_downvote_count.downvote}}
+				<!-- Comments to the Answer -->
+				<div ng-repeat='i in this_AnswerTopic' id="commentBox">
+					<div ng-repeat='j in i'>
+						<div ng-repeat='k in j'>
+							<h6>{{ k.user_name }} | {{ k.comment }}</h6>
+						</div>
 					</div>
-				</div>
+				</div>	
+
+				<!-- Upvote -->
+				<input type='submit' ng-click='upvote(z._id)' value='Up vote'>
+				{{updated_upvote_count.upvote}}
+
+				<!-- Downvote -->
+				<input type='submit' ng-click='downvote(z._id)' value='Down vote'>
+				{{updated_downvote_count.downvote}}
+
+				<br>
+
+				<!-- Comment on this Answer -->
+				<textarea rows='4' cols='40' ng-model='newAnswer.comments'></textarea>
+				<!-- Pass in the current answer id when user clicks on 'Comment' button -->
+				<input type='submit' ng-model='newAnswer' ng-click='newComment(z._id)' value='Comment'>
 			</div>
+		</div>
+	</div>
 </div>
  
 

@@ -26,9 +26,13 @@ module.exports = function(app){
 	app.get('/get_all', function(req, res){
 		topic.get_all(req, res);
 	})
+
 	app.get('/getThisTopicAnswer/:id', function(req, res){
 		topic.get_this_topic_answer(req, res, req.params.id);
+	})
 
+	app.get('/getThisAnswerComment/:id', function(req, res){
+		topic.get_this_answer_comment(req, res, req.params.id);
 	})
 
 	app.get('/upvote_count/:id', function(req, res){
@@ -39,13 +43,6 @@ module.exports = function(app){
 		topic.downvote_this_count(req, res, req.params.id);
 	})
 
-
-
-
-	app.post('/get_this_User_Profile/:name', function(req, res){
-		topic.get_User_Profile(req, res);
-
-	})	
 
 
 
@@ -61,6 +58,10 @@ module.exports = function(app){
 		topic.addAnswer(req, res, req.params.id);
 	})
 
+	app.post('/add_comment/:id', function(req, res){
+		topic.addComment(req, res, req.params.id);
+	})
+
 	// once user creates a topic, update topic count
 	app.post('/update_user_topic_count/', function(req, res){
 		topic.updateUserTopicCount(req, res);
@@ -71,6 +72,10 @@ module.exports = function(app){
 	// once user answers a topic, update post count
 		topic.updateUserPostCount(req, res);
 	})
+
+	app.post('/get_this_User_Profile/:name', function(req, res){
+		topic.get_User_Profile(req, res);
+	})	
 
 
 
