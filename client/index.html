@@ -43,13 +43,13 @@
 
 		// FACTORY =================================================
 		myApp.factory('UserFactory', function($http){
+			// setting up empty arrays to store info temporarily
 			var factory = {};
 			var stashCurrentUser = [];
 			var topics = {};
 			var user_and_answer = [];
 			var user_and_comment = [];
 			var tempUser = [];
-
 
 			factory.getAllTopics = function(callback){
 				$http.get('/getTopics').success(function(output){
@@ -111,8 +111,6 @@
 				$http.post('/update_user_post_count', stashCurrentUser).success(function(output){});
 			}
 
-
-
 			factory.comment_to_answer = function(answer_id, comment, callback){
 				// store current user name and comment to new array
 				user_and_comment.push({user_name:stashCurrentUser, comment:comment});
@@ -131,9 +129,6 @@
 				})
 			}
 
-
-
-
 			factory.thisTopicComment = function(id, callback){
 				$http.get('/getThisAnswerComment/' + id).success(function(output){
 					console.log('==========');
@@ -141,16 +136,6 @@
 					callback(output);
 				})
 			}
-
-
-
-
-
-
-
-
-
-
 
 			factory.upvoteCount = function(id, callback){
 				$http.get('/upvote_count/' + id).success(function(output){
@@ -163,7 +148,7 @@
 					callback(output);
 				})
 			}
-		
+
 			return factory;
 		});
 
@@ -175,7 +160,7 @@
 
 			$scope.currentUser = {};
 
-			// get all topics
+			// THIS will load Automaticall upon dashboard.html page load
 			UserFactory.getAllTopics(function(data){
 				$scope.allTopics = data;
 			})
@@ -202,7 +187,8 @@
 				UserFactory.createTopic($scope.newTopic, function(){
 					$scope.topics = UserFactory.getAllTopics
 				})
-				$scope.newTopic = {}; // clear the form
+				// clear the form
+				$scope.newTopic = {};
 			}
 
 			$scope.getATopic = function(x){
@@ -220,7 +206,7 @@
 				$location.path(location);
 			}
 
-		})
+		}) // end SignInController
 
 
 
@@ -232,6 +218,9 @@
 			// store '$routeParams.id' into variable 'topicID'
 			topicID = $routeParams.id;
 
+			// WHEN topic.html LOADS, THE FOLLOWING FIRES UP ==============
+
+			// this gives us access to the user name who created topic
 			UserFactory.get_a_topic(topicID, function(data){
 				$scope.thisTopic = data;
 			})
@@ -240,19 +229,19 @@
 					$scope.this_TopicAnswer = data;
 			})
 
-
+			// ============================================================
 			$scope.newAnswer = function(topic_id){
 				// incoming $scope.newAnswer.answer is the answer to the topic
 				var answer = $scope.newAnswer.answer;
 				// send the topic id and answer up to factory
-				UserFactory.answer_to_topic(topic_id, answer, function(data){
-					// attempting to update the list but currently does not work.
-					UserFactory.thisTopicAnswer(topicID, function(data){
-						$scope.this_TopicAnswer = data;
-					});
-				});
+				UserFactory.answer_to_topic(topic_id, answer, function(data){});
 				// clear the form
 				$scope.newAnswer = {};
+
+				// the follwing allows auto update as soon as user creates answer
+				UserFactory.thisTopicAnswer(topicID, function(data){
+					$scope.this_TopicAnswer = data;
+			})
 			}
 
 			$scope.newComment = function(answer_id){
@@ -283,10 +272,9 @@
 					$scope.updated_downvote_count = data;
 				});
 			}
+		}) // end TopicController
 
-			
 
-		})
 
 		// CONTROLLER ==========================================================
 		myApp.controller('UserController', function($scope, UserFactory, $location, $routeParams){
@@ -298,17 +286,14 @@
 			UserFactory.get_User_Profile(thisUser, function(data){
 				$scope.userProfileData = data;
 			})
-
 		})
-
-		
 
 	</script>
 
 
 </head>
 <body>
-		<div ng-view=""></div>
+	<div ng-view=""></div>
 </body>
 </html>
 

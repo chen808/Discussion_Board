@@ -51,16 +51,14 @@ module.exports = (function(){
 		 },
 
 
-
-
 		 // *** look in to this (extra code??)
-		 get_all: function(req, res){
-		 	Topic.find({})
-		 		.populate('answers')
-		 		.exec(function(err, answer){
-		 			res.json('answer', {answer});
-		 		})
-		 },
+		 // get_all: function(req, res){
+		 // 	Topic.find({})
+		 // 		.populate('answers')
+		 // 		.exec(function(err, answer){
+		 // 			res.json('answer', {answer});
+		 // 		})
+		 // },
 
 		 // *** extra code, same as bottom??
 		 get_this_topic_answer: function(req, res){
@@ -290,3 +288,9 @@ module.exports = (function(){
 
 
 })(); // end module.exports
+
+
+
+
+
+
